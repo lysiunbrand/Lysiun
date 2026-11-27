@@ -1,8 +1,9 @@
 import Stripe from 'stripe'
 import { NextResponse } from 'next/server'
 import { PRODUCTS, type ProductId } from '@/lib/products'
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+export const dynamic = 'force-dynamic'
 export async function POST(req: Request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
   const { productId, quantity = 1 } = await req.json() as { productId: ProductId; quantity?: number }
   const p = PRODUCTS[productId]; if (!p) return NextResponse.json({ error: 'unknown product' }, { status: 400 })
   const session = await stripe.checkout.sessions.create({
